@@ -1,27 +1,48 @@
-from pydantic import BaseModel, Field
-from datetime import datetime
-from typing import Optional
+from pydantic import BaseModel
 
 
-# Base schema for a piece of text
-# (Defines common fields for the text)
-class TextBase(BaseModel):
+# Schema for analysing text (ML model response)
+class AnalyseText(BaseModel):
     text: str
+    sentiment: float
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "text": "Example Text",
+                "sentiment": 0.0}}
 
 
-# Schema for creating a text entry
-# (Used for request validation when creating an entry)
-class TextCreate(TextBase):
-    pass
+# Schema for analysing and adding text (combined functionality)
+class AnalyseAndAddText(BaseModel):
+    text: str
+    sentiment: float
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "text": "Example Text",
+                "sentiment": 0.0}}
 
 
-# Schema for responding with an item
-# (Adds the id field for responses)
-class TextAnalysis(TextBase):
+# Schema for adding text and sentiment (manual entry)
+class AddText(BaseModel):
+    text: str
+    sentiment: float
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "text": "Example Text",
+                "sentiment": 0.0}}
+
+
+# Schema for reading text entries from the database
+class RetrieveTextEntry(BaseModel):
     id: int
-    sentiment: Optional[float] = Field(None, ge=-1.0, le=1.0)  # validates between -1 and 1
-    processed: bool
-    timestamp: datetime
+    text: str
+    sentiment: float
 
     class Config:
         from_attributes = True
+
