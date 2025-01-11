@@ -1,24 +1,27 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from datetime import datetime
+from typing import Optional
 
 
-# Base schema for an item
-# (Defines common fields for the Item)
-class ItemBase(BaseModel):
-    name: str
-    description: str
-    price: float
+# Base schema for a piece of text
+# (Defines common fields for the text)
+class TextBase(BaseModel):
+    text: str
 
 
-# Schema for creating an item
-# (Used for request validation when creating an item)
-class ItemCreate(ItemBase):
+# Schema for creating a text entry
+# (Used for request validation when creating an entry)
+class TextCreate(TextBase):
     pass
 
 
 # Schema for responding with an item
 # (Adds the id field for responses)
-class ItemResponse(ItemBase):
+class TextAnalysis(TextBase):
     id: int
+    sentiment: Optional[float] = Field(None, ge=-1.0, le=1.0)  # validates between -1 and 1
+    processed: bool
+    timestamp: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

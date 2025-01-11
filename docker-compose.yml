@@ -1,15 +1,15 @@
-version: '3.8'
-
 services:
   fastapi_app:
     build:
       context: ./fastapi_app
     container_name: fastapi_app
     depends_on:
-      - postgres
-      - ml_model
+      postgres:
+        condition: service_healthy
+      ml_model:
+        condition: service_started
     environment:
-      DATABASE_URL: postgresql://test_user:test_password@postgres:5432/test_db
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       ML_MODEL_URL: http://ml_model:5000
     ports:
       - "8000:8000"
@@ -18,20 +18,35 @@ services:
     image: postgres:17
     container_name: postgres
     environment:
-      POSTGRES_USER: test_user
-      POSTGRES_PASSWORD: test_password
-      POSTGRES_DB: test_db
+      POSTGRES_USER: ${POSTGRES_USER}  # Loaded from the .env file
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Loaded from the .env file
+      POSTGRES_DB: ${POSTGRES_DB}  # Loaded from the .env file
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  # Persistent volume
+      - ./postgres/init:/docker-entrypoint-initdb.d/  # Initialization scripts
     ports:
       - "5432:5432"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
   ml_model:
     build:
       context: ./ml_model
     container_name: ml_model
     ports:
-      - "5000:5000"
+      - "5001:5000"
+
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:5000" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
 volumes:
   postgres_data:

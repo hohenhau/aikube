@@ -1,7 +1,7 @@
 # Base image
 FROM python:3.11-slim
 
-# Set the working directory (Insde the Docker Container, not Locally!)
+# Set the working directory (Inside the Docker Container, not Locally!)
 WORKDIR /app
 
 # Copy requirements file
