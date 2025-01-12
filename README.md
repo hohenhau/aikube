@@ -2,6 +2,7 @@
 
 ```mermaid
 
+
 flowchart LR
 
 	n00(Ingress <br/> Controller)
@@ -15,15 +16,17 @@ flowchart LR
 				n30["PostgreSQL <br/> (Database)"]
 			end
 			subgraph g12["Docker Image"]
-				n40["Machine <br/> Learning <br/>Model"]
+				n11["FastAPI <br/> (Internal)"]
+				n40["ML Model <br/> Semantic Analysis"]
 			end
 		end	
 	end
 	
-	n00 -- HTTP <br/> Requests--> n10
-	n10 --> n20
-	n20 -- SQL <br/> Data <br/> Queries--> n30
-	n10 -- HTTP <br/> Inference <br/> Requests--> n40
+	n00 -- HTTP <br/> Requests ----> n10
+	n10 <--> n20
+	n20 <-- SQL <br/> Transactions --> n30
+	n11 <--> n10
+	n11 <--> n40
 
 	classDef node0Style fill:#1697a6, stroke:#B4B4B4
 	classDef node1Style fill:#ffb3ae, stroke:#B4B4B4
@@ -37,5 +40,6 @@ flowchart LR
 	class n30,n31,n32,n33,n34,n35,n36,n37,n38,n39 node3Style;
 	class n40,n41,n42,n43,n44,n45,n46,n47,n48,n49 node4Style;
 	class h00,h01,h02,h03,h04,h05,h06,h07,h08,h09 hiddenStyle;
+	
 	
 ```
