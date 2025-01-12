@@ -3,13 +3,12 @@ from datetime import datetime
 from app.database import Base
 
 
-class Item(Base):
-    __tablename__ = "items"
+class SentimentEntry(Base):
+    __tablename__ = "sentiments"
 
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String, nullable=False)  # Ensure 'text' is defined
     sentiment = Column(Float, nullable=True)
-    processed = Column(Boolean, default=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
     # Ensure database-level validation

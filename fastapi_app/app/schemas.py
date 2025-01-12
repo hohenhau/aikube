@@ -1,37 +1,13 @@
 from pydantic import BaseModel
 
 
-# Schema for analysing text (ML model response)
-class AnalyseText(BaseModel):
+class AnalyseAndOrAddText(BaseModel):
     text: str
-    sentiment: float
+    sentiment: float | None = None
 
     class Config:
-        schema_extra = {
-            "example": {
-                "text": "Example Text",
-                "sentiment": 0.0}}
-
-
-# Schema for analysing and adding text (combined functionality)
-class AnalyseAndAddText(BaseModel):
-    text: str
-    sentiment: float
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "text": "Example Text",
-                "sentiment": 0.0}}
-
-
-# Schema for adding text and sentiment (manual entry)
-class AddText(BaseModel):
-    text: str
-    sentiment: float
-
-    class Config:
-        schema_extra = {
+        from_attributes = True
+        json_schema_extra = {
             "example": {
                 "text": "Example Text",
                 "sentiment": 0.0}}
@@ -46,3 +22,8 @@ class RetrieveTextEntry(BaseModel):
     class Config:
         from_attributes = True
 
+
+# Schema for deleting all entries from the database
+class DeleteAllEntries(BaseModel):
+    message: str
+    deleted_count: int

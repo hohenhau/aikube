@@ -4,8 +4,21 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+
+# Dependency to provide a database session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
 # Database URL for PostgreSQL (update with your credentials)
-SQLALCHEMY_DATABASE_URL = "postgresql://test_user:test_password@postgres:5432/test_db"
+user = 'test_user'
+password = 'test_password'
+database = 'test_db'
+SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@postgres:5432/{database}"
 
 # Create the SQLAlchemy engine
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -17,10 +30,3 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-# Dependency to provide a database session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()

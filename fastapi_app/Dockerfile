@@ -10,11 +10,15 @@ COPY requirements.txt .
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the FastAPI application code
+# Copy the application code
 COPY . .
 
-# Expose the port FastAPI will run on
+# Expose the service port
 EXPOSE 8000
 
-# Command to run the FastAPI app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Set environment variable for the port
+ARG INTERNAL_FASTAPI_PORT=8000
+ENV INTERNAL_PORT=$INTERNAL_FASTAPI_PORT
+
+# Start the FastAPI app
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $INTERNAL_PORT"]

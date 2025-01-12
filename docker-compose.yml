@@ -2,6 +2,8 @@ services:
   fastapi_app:
     build:
       context: ./fastapi_app
+      args:
+        INTERNAL_FASTAPI_PORT: ${INTERNAL_FASTAPI_PORT}  # Pass from .env
     container_name: fastapi_app
     depends_on:
       postgres:
@@ -9,10 +11,10 @@ services:
       ml_model:
         condition: service_started
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      ML_MODEL_URL: http://ml_model:5000
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
+      ML_MODEL_URL: http://ml_model:${INTERNAL_ML_PORT}  # Use INTERNAL_PORT for ML communication
     ports:
-      - "8000:8000"
+      - "${FASTAPI_PORT}:${INTERNAL_FASTAPI_PORT}"  # Map host to container INTERNAL_PORT
 
   postgres:
     image: postgres:17
@@ -25,7 +27,7 @@ services:
       - postgres_data:/var/lib/postgresql/data  # Persistent volume
       - ./postgres/init:/docker-entrypoint-initdb.d/  # Initialization scripts
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${INTERNAL_POSTGRES_PORT}"
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
@@ -37,12 +39,14 @@ services:
   ml_model:
     build:
       context: ./ml_model
+      args:
+        INTERNAL_ML_PORT: ${INTERNAL_ML_PORT}  # Pass from .env
     container_name: ml_model
     ports:
-      - "5001:5000"
+      - "${ML_PORT}:${INTERNAL_ML_PORT}"
 
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:5000" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:${INTERNAL_ML_PORT}" ]
       interval: 10s
       retries: 5
       start_period: 30s

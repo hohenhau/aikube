@@ -1,16 +1,24 @@
+# Base image
 FROM python:3.11-slim
 
+# Set the working directory (Inside the Docker Container, not Locally!)
 WORKDIR /app
 
-# Install dependencies
+# Copy requirements file
 COPY requirements.txt .
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
 COPY . .
 
 # Expose the service port
-EXPOSE 5000
+EXPOSE 5001
+
+# Set environment variable for the port
+ARG INTERNAL_ML_PORT=5001
+ENV INTERNAL_PORT=$INTERNAL_ML_PORT
 
 # Start the FastAPI app
-CMD ["uvicorn", "model:app", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["sh", "-c", "uvicorn model:app --host 0.0.0.0 --port $INTERNAL_PORT"]
