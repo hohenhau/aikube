@@ -16,7 +16,7 @@ ML_MODEL_URL = os.getenv("ML_MODEL_URL")  # Loaded from .env or the docker-compo
 
 
 async def analyse_sentiment(text: str) -> dict:
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:  # Increase timeout
         response = await client.post(f"{ML_MODEL_URL}/analyse/", json={"text": text})
         response.raise_for_status()
         return response.json()
