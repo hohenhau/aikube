@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: fastapi-app
-        image: localhost:5002/aikube-fastapi_app:latest
+        image: localhost:5002/aikube-fastapi_app.tf:latest
         ports:
         - containerPort: 8000
         env:

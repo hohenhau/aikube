@@ -103,13 +103,13 @@ cd aikube
 
 2. **Build Docker Images**
 ```bash
-docker build -t localhost:5002/aikube-fastapi_app:latest ./fastapi_app
+docker build -t localhost:5002/aikube-fastapi_app.tf:latest ./fastapi_app.tf
 docker build -t localhost:5002/aikube-ml_model:latest ./ml_model
  ```
 
 3. **Push Images to Local Registry**
 ```bash
-docker push localhost:5002/aikube-fastapi_app:latest
+docker push localhost:5002/aikube-fastapi_app.tf:latest
 docker push localhost:5002/aikube-ml_model:latest
 ```
 

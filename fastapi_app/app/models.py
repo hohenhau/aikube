@@ -14,5 +14,4 @@ class SentimentEntry(Base):
     # Ensure database-level validation
     __table_args__ = (
         CheckConstraint('sentiment >= -1 AND sentiment <= 1', name='check_sentiment_range'),
-        CheckConstraint('LENGTH(text) <= 500', name='check_text_length'),
-    )
+        CheckConstraint('LENGTH(text) <= 500', name='check_text_length'))
