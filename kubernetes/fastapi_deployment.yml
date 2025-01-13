@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-app
+  template:
+    metadata:
+      labels:
+        app: fastapi-app
+    spec:
+      containers:
+      - name: fastapi-app
+        image: localhost:5002/aikube-fastapi_app:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ML_MODEL_URL
+          value: http://ml-model-service:80  # Correct service name and port
