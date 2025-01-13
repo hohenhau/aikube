@@ -96,35 +96,40 @@ flowchart LR
 ### Steps to Run
 
 1. **Clone the Repository**
-   ```bash
-   git clone <repository-url>
-   cd aikube```
+```bash
+git clone <repository-url>
+cd aikube
+```
 
 2. **Build Docker Images**
-	```bash
-	docker build -t localhost:5002/aikube-fastapi_app:latest ./fastapi_app
-	docker build -t localhost:5002/aikube-ml_model:latest ./ml_model```
+```bash
+docker build -t localhost:5002/aikube-fastapi_app:latest ./fastapi_app
+docker build -t localhost:5002/aikube-ml_model:latest ./ml_model
+ ```
 
 3. **Push Images to Local Registry**
-	```bash
-	docker push localhost:5002/aikube-fastapi_app:latest
-	docker push localhost:5002/aikube-ml_model:latest
-	```
+```bash
+docker push localhost:5002/aikube-fastapi_app:latest
+docker push localhost:5002/aikube-ml_model:latest
+```
 
 4. **Deploy to Kubernetes**
-	```bashApply all Kubernetes manifests:
-	kubectl apply -f kubernetes/```
+```bashApply all Kubernetes manifests:
+kubectl apply -f kubernetes/
+```
 
 5. **Verify Deployment**
 Check the status of all pods and services:
-	```bash
-	kubectl get pods
-	kubectl get services```
+```bash
+kubectl get pods
+kubectl get services
+ ```
 
 6. **Access the Application**
 Use the assigned NodePort to interact with the FastAPI app. For example:
-	```bash
-	curl -X POST http://localhost:<NodePort>/analyse_text \
-	-H "Content-Type: application/json" \
-	-d '{"text": "I love Kubernetes!"}'
-	File Structure```
+```bash
+curl -X POST http://localhost:<NodePort>/analyse_text \
+-H "Content-Type: application/json" \
+-d '{"text": "I love Kubernetes!"}'
+File Structure
+ ```
