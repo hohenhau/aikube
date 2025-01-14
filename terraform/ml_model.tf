@@ -27,15 +27,37 @@ resource "kubernetes_deployment" "ml_model" {
         container {
           name  = "ml-model"
           image = "localhost:5002/aikube-ml_model:latest"
+          image_pull_policy = "Never"  # Use local images
 
           port {
             container_port = 5001
+          }
+
+          resources {
+            limits = {
+              cpu    = "1"
+              memory = "1Gi"
+            }
+            requests = {
+              cpu    = "500m"
+              memory = "512Mi"
+            }
+          }
+
+          liveness_probe {
+            http_get {
+              path = "/"
+              port = 5001
+            }
+            initial_delay_seconds = 30
+            period_seconds       = 10
           }
         }
       }
     }
   }
 }
+
 
 resource "kubernetes_service" "ml_model" {
   metadata {

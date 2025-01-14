@@ -26,7 +26,8 @@ resource "kubernetes_deployment" "fastapi_app" {
       spec {
         container {
           name  = "fastapi-app"
-          image = "localhost:5002/aikube-fastapi_app:latest"
+          image = "host.docker.internal:5002/aikube-fastapi_app:latest"
+          image_pull_policy = "IfNotPresent"
 
           port {
             container_port = 8000
@@ -47,22 +48,24 @@ resource "kubernetes_deployment" "fastapi_app" {
   }
 }
 
-resource "kubernetes_service" "fastapi_app" {
-  metadata {
-    name      = "fastapi-service"
-    namespace = kubernetes_namespace.aikube.metadata[0].name
-  }
 
-  spec {
-    selector = {
-      app = "fastapi-app"
-    }
 
-    port {
-      port        = 80
-      target_port = 8000
-    }
-
-    type = "NodePort"
-  }
-}
+#resource "kubernetes_service" "fastapi_app" {
+#  metadata {
+#    name      = "fastapi-service"
+#    namespace = kubernetes_namespace.aikube.metadata[0].name
+#  }
+#
+#  spec {
+#    selector = {
+#      app = "fastapi-app"
+#    }
+#
+#    port {
+#      port        = 80
+#      target_port = 8000
+#    }
+#
+#    type = "NodePort"
+#  }
+#}
